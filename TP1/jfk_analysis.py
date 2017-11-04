@@ -19,9 +19,8 @@ numField = len(file.readline().split(";"))
 for f in file:
 
         tab = f.split(";")
-
-        try:
-            count = count + 1
+        count = count + 1
+        if tab[11].isdigit():
             page = int(tab[11])
             pageCount = pageCount + page
 
@@ -37,20 +36,16 @@ for f in file:
             else:
                 print("error")
 
-            if str(tab[6]) not in dictionary.keys():
+        if str(tab[6]) not in dictionary.keys():
                 dictionary.update({str(tab[6]): 1})
-            if str(tab[4]) not in dictionary2.keys():
+        if str(tab[4]) not in dictionary2.keys():
                 dictionary2.update({str(tab[4]): 1})
 
-            if str(tab[6]) in dictionary.keys():
+        if str(tab[6]) in dictionary.keys():
                 dictionary[str(tab[6])] += 1
 
-            if str(tab[4]) in dictionary2.keys():
+        if str(tab[4]) in dictionary2.keys():
                 dictionary2[str(tab[4])] += 1
-
-        except ValueError:
-            countBug += 1
-
 
 print(pageCount/count)
 print("max : " + pageMax.__str__() + " min : " + pageMin.__str__())
@@ -63,6 +58,10 @@ for v, i in dictionary.items():
 print("\n")
 for v, i in dictionary2.items():
     print(str(v), str(i))
+
+
+
+
 
 
 
