@@ -42,10 +42,10 @@ for f in file:
             if str(tab[4]) not in dictionary2.keys():
                 dictionary2.update({str(tab[4]): 1})
 
-            if str(tab[6]) in dictionary:
+            if str(tab[6]) in dictionary.keys():
                 dictionary[str(tab[6])] += 1
 
-            if str(tab[4]) in dictionary2:
+            if str(tab[4]) in dictionary2.keys():
                 dictionary2[str(tab[4])] += 1
 
         except ValueError:
@@ -60,6 +60,7 @@ print("number of agencies is : " + str(dictionary2.__len__()))
 for v, i in dictionary.items():
     print(str(v), str(i))
 
+print("\n")
 for v, i in dictionary2.items():
     print(str(v), str(i))
 
