@@ -1,5 +1,6 @@
 import csv
 import builtins
+from datetime import datetime
 
 file = open("jfkrelease-2017-dce65d0ec70a54d5744de17d280f3ad2.csv")
 
@@ -14,12 +15,20 @@ dictionary2 = {}
 dictionaryDocumentType = {}
 countype = 0
 countype2 = 0
-
+datetab = []
+error = 0
 numField = len(file.readline().split(";"))
 for f in file:
 
         tab = f.split(";")
         count = count + 1
+        try:
+            thedate = datetime.strptime(tab[5], "%m/%d/%Y")
+            datetab.insert(count, thedate)
+        except ValueError:
+
+            error += 1
+
         if tab[11].isdigit():
             page = int(tab[11])
             pageCount = pageCount + page
@@ -46,8 +55,9 @@ for f in file:
 
         if str(tab[4]) in dictionary2.keys():
                 dictionary2[str(tab[4])] += 1
-
-print(pageCount/count)
+dateMax = max(datetab)
+dateMin = min(datetab)
+print("the max date is " + str(dateMax) + " and the min date is " + str(dateMax))
 print("max : " + pageMax.__str__() + " min : " + pageMin.__str__())
 print("number of types of documents is : " + str(dictionary.__len__()))
 print("number of agencies is : " + str(dictionary2.__len__()))
@@ -58,6 +68,9 @@ for v, i in dictionary.items():
 print("\n")
 for v, i in dictionary2.items():
     print(str(v), str(i))
+
+
+
 
 
 
