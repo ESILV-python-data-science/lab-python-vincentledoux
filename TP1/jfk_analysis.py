@@ -16,6 +16,7 @@ dictionaryDocumentType = {}
 countype = 0
 countype2 = 0
 datetab = []
+numDocYear = {}
 error = 0
 numField = len(file.readline().split(";"))
 for f in file:
@@ -25,6 +26,10 @@ for f in file:
         try:
             thedate = datetime.strptime(tab[5], "%m/%d/%Y")
             datetab.insert(count, thedate)
+            if str(thedate) not in numDocYear.keys():
+                numDocYear.update({str(thedate): 1})
+            if str(thedate) in numDocYear.keys():
+                numDocYear[str(thedate)] += 1
         except ValueError:
 
             error += 1
@@ -69,6 +74,9 @@ print("\n")
 for v, i in dictionary2.items():
     print(str(v), str(i))
 
+print("\n")
+for v, i in numDocYear.items():
+    print(v, str(i))
 
 
 
