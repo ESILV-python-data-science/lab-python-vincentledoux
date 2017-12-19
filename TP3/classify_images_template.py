@@ -32,22 +32,32 @@ ch.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 logger.addHandler(ch)
 
 
-    X_train, Y_train, X_temp, Y_temp = train_test_split(all_df['Class'], all_df['Filename'], test_size=0.4)
-    X_test, Y_test, X_valid, Y_Valid = train_test_split(X_temp, Y_temp, test_size=0.5)
 
 
-def KNN(X_train, Y_train, X_test, Y_test):
+def KNN(X_train, Y_train, X_test, Y_test, X_valid, Y_valid):
 
     neigh = KNeighborsClassifier(n_neighbors=1)
     x = neigh.fit(X_train, Y_train)
-    metrics.accuracy_score(x)
-    return
+    neigh.predict(X_test)
+    neigh.predict(Y_test)
+    x = neigh.fit(X_test, Y_test)
+    neigh.predict(X_valid)
+    neigh.predict(Y_valid)
+    y =metrics.accuracy_score(X_valid, Y_valid)
 
-def Linear(X_train, Y_train, X_test, Y_test):
+
+
+    return y
+
+def Linear(X_train, Y_train, X_test, Y_test, X_valid, Y_valid):
     regr = linear_model.LinearRegression()
     regr.fit(X_train, Y_train)
-    np.mean((regr.predict(all_df['X']) - all_df['Y']) ** 2)
-    regr.score()
+    np.mean((regr.predict(X_test) - Y_test) ** 2)
+    x = regr.score(X_test, Y_test)
+    regr.git(X_train, Y_train)
+    np.mean((regr.predict(X_valid) - Y_valid) **2)
+    x = regr.score(X_valid, Y_valid)
+    return x
 
 
 
@@ -140,7 +150,8 @@ if __name__ == "__main__":
 
     # Train classifier
     logger.info("Training Classifier")
-
+    X_train, Y_train, X_temp, Y_temp = train_test_split(all_df['Class'], all_df['Filename'], test_size=0.4)
+    X_test, Y_test, X_valid, Y_Valid = train_test_split(X_temp, Y_temp, test_size=0.5)
     # Use train_test_split to create train/test split
     logger.info("Train set size is {}".format(X_train.shape))
     logger.info("Test set size is {}".format(X_test.shape))
@@ -173,7 +184,11 @@ if __name__ == "__main__":
     x = stdin.read(1)
     userinput = stdin.readline()
     if userinput == "1":
-        KNN(X_train, Y_train, X_valid, Y_Valid)
+        KNN(X_train, Y_train, X_test, Y_test, X_valid, Y_Valid)
+    if userinput == "2":
+        Linear(X_train, Y_train, X_test, Y_test, X_valid, Y_Valid)
+    else:
+        print('you choose the wrong numner')
 
 
 
