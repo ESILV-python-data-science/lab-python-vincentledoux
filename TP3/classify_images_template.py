@@ -12,6 +12,7 @@ import time
 import sys
 import pickle
 
+import clf as clf
 from tqdm import tqdm
 import pandas as pd
 from PIL import Image, ImageFilter
@@ -19,16 +20,35 @@ from sklearn.cluster import KMeans
 from sklearn import svm, metrics, neighbors
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn import linear_model
+from sys import stdin
 
 import numpy as np
-
-
 # Setup logging
 logger = logging.getLogger('classify_images.py')
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()
 ch.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
 logger.addHandler(ch)
+
+
+    X_train, Y_train, X_temp, Y_temp = train_test_split(all_df['Class'], all_df['Filename'], test_size=0.4)
+    X_test, Y_test, X_valid, Y_Valid = train_test_split(X_temp, Y_temp, test_size=0.5)
+
+
+def KNN(X_train, Y_train, X_test, Y_test):
+
+    neigh = KNeighborsClassifier(n_neighbors=1)
+    x = neigh.fit(X_train, Y_train)
+    metrics.accuracy_score(x)
+    return
+
+def Linear(X_train, Y_train, X_test, Y_test):
+    regr = linear_model.LinearRegression()
+    regr.fit(X_train, Y_train)
+    np.mean((regr.predict(all_df['X']) - all_df['Y']) ** 2)
+    regr.score()
+
 
 
 
@@ -125,8 +145,7 @@ if __name__ == "__main__":
     logger.info("Train set size is {}".format(X_train.shape))
     logger.info("Test set size is {}".format(X_test.shape))
 
-    X_train, Y_train, X_temp, Y_temp = train_test_split(all_df[''], all_df[''], test_size=0.4)
-    X_test, Y_test, X_valid, Y_Valid = train_test_split(X_temp, Y_temp, test_size=0.5)
+
     if args.nearest_neighbors:
         # create KNN classifier with args.nearest_neighbors as a parameter
         logger.info('Use kNN classifier with k= {}'.format(args.nearest_neighbors))
@@ -145,6 +164,19 @@ if __name__ == "__main__":
 
     # Print score produced by metrics.classification_report and metrics.accuracy_score
     logger.info("Testing  done in %0.3fs" % (time.time() - t0))
+    X_train, Y_train, X_temp, Y_temp = train_test_split(all_df['Class'], all_df['Filename'], test_size=0.4)
+    X_test, Y_test, X_valid, Y_Valid = train_test_split(X_temp, Y_temp, test_size=0.5)
+
+    print("which algorithm do you wish ? ")
+    print("1. KNN")
+    print("2. Linear Regression")
+    x = stdin.read(1)
+    userinput = stdin.readline()
+    if userinput == "1":
+        KNN(X_train, Y_train, X_valid, Y_Valid)
+
+
+
 
 
 
