@@ -59,6 +59,13 @@ def Linear(X_train, Y_train, X_test, Y_test, X_valid, Y_valid):
     x = regr.score(X_valid, Y_valid)
     return x
 
+def Linear2(X_train, Y_train, X_test, Y_test):
+    regr = linear_model.LinearRegression()
+    regr.fit(X_train, Y_train)
+    np.mean((regr.predict(X_test) - Y_test) ** 2)
+    x = regr.score(X_test, Y_test)
+    return x
+
 
 
 
@@ -181,12 +188,15 @@ if __name__ == "__main__":
     print("which algorithm do you wish ? ")
     print("1. KNN")
     print("2. Linear Regression")
+    print("3.Linear with no validation")
     x = stdin.read(1)
     userinput = stdin.readline()
     if userinput == "1":
         KNN(X_train, Y_train, X_test, Y_test, X_valid, Y_Valid)
     if userinput == "2":
         Linear(X_train, Y_train, X_test, Y_test, X_valid, Y_Valid)
+    if userinput == "3":
+        Linear2(X_train, Y_train, X_test, Y_test)
     else:
         print('you choose the wrong numner')
 
