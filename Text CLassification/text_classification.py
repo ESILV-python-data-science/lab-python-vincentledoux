@@ -45,31 +45,60 @@ if __name__ == "__main__":
     #quest 2
     X_train, X_temp, Y_train, Y_temp= train_test_split(df["text"], df["category"], test_size=0.4)
     X_test, X_dev, Y_test, Y_dev = train_test_split(X_temp, Y_temp, test_size= 0.5)
-    vectorizer = CountVectorizer(max_features=1000)
-    vectorizer.fit(X_train)
-    X_train_counts = vectorizer.transform(X_train)
-    X_test_counts = vectorizer.transform(X_test)
-    X_dev_counts = vectorizer.transform(X_dev)
 
-    print(X_train.size)
-    print(X_dev.size)
-    print(X_test.size)
+    features = [1000,3000,5000,7000,10000,15000]
+    alpha = [0.1,0.4,0.7,1]
+    X_train_count = []
+    X_test_count = []
+    X_dev_count = []
+    Tab = []
+    count = 0
+    for i in features:
+        for a in alpha:
+            vectorizer = CountVectorizer(max_features=i)
+            vectorizer.fit(X_train)
+            X_train_counts = vectorizer.transform(X_train)
+            X_test_counts = vectorizer.transform(X_test)
+            X_dev_counts = vectorizer.transform(X_dev)
 
-    #quest 3
-    mmb = MultinomialNB()
-    mmb.fit(X_train_counts, Y_train)
-    y_pred_train = mmb.predict(X_train_counts)
-    y_pred_test = mmb.predict(X_test_counts)
-    y_pred_dev = mmb.predict(X_dev_counts)
-    print("train_score " + str(metrics.accuracy_score(Y_train, y_pred_train)))
-    print("test_score " + str(metrics.accuracy_score(Y_test, y_pred_test)))
-    print("dev_score " + str(metrics.accuracy_score(Y_dev, y_pred_dev)))
+            print(X_train.size)
+            print(X_dev.size)
+            print(X_test.size)
 
-    #quest4
-    tf_transformer = TfidfTransformer().fit(X_train_counts)
-    X_train_tf = tf_transformer.transform(X_train_counts)
-    X_test_tf = tf_transformer.transform(X_test_counts)
-    X_dev_tf = tf_transformer.transform(X_dev_counts)
+            # quest 3
+            mmb = MultinomialNB(alpha=a)
+            mmb.fit(X_train_counts, Y_train)
+            y_pred_train = mmb.predict(X_train_counts)
+            y_pred_test = mmb.predict(X_test_counts)
+            y_pred_dev = mmb.predict(X_dev_counts)
+            print("alpha : " + str(a))
+            print("feature : " + str(i))
+            print("train_score " + str(metrics.accuracy_score(Y_train, y_pred_train)))
+            print("test_score " + str(metrics.accuracy_score(Y_test, y_pred_test)))
+            print("dev_score " + str(metrics.accuracy_score(Y_dev, y_pred_dev)))
+
+            if Tab == []:
+                Tab.append(metrics.accuracy_score(Y_test, y_pred_test))
+
+            mymax = max(Tab, key=float)
+            if mymax < metrics.accuracy_score(Y_test, y_pred_test):
+                X_train_count = X_train_counts
+                X_test_count = X_test_counts
+                X_dev_count = X_dev_counts
+
+
+            Tab.append(metrics.accuracy_score(Y_test, y_pred_test))
+            count += 1
+
+
+
+    # quest4
+
+    tf_transformer = TfidfTransformer().fit(X_train_count)
+    X_train_tf = tf_transformer.transform(X_train_count)
+    X_test_tf = tf_transformer.transform(X_test_count)
+    X_dev_tf = tf_transformer.transform(X_dev_count)
+
 
     mmb.fit(X_train_tf, Y_train)
     y_pred_train = mmb.predict(X_train_tf)
@@ -78,11 +107,10 @@ if __name__ == "__main__":
     print("train_score " + str(metrics.accuracy_score(Y_train, y_pred_train)))
     print("test_score " + str(metrics.accuracy_score(Y_test, y_pred_test)))
     print("dev_score " + str(metrics.accuracy_score(Y_dev, y_pred_dev)))
+    count += 1
 
 
 
-
-    #print("Number of mislabeled points out of a total %d points : %d"% (iris.data.shape[0], (iris.target != y_pred).sum()))
 
 
 else:
