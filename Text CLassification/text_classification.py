@@ -109,6 +109,12 @@ if __name__ == "__main__":
     print("dev_score " + str(metrics.accuracy_score(Y_dev, y_pred_dev)))
     count += 1
 
+    from sklearn.metrics import classification_report, confusion_matrix
+
+    print(classification_report(X_train_tf, y_pred_train, Y_test))
+    confusion_matrix(X_train_tf, y_pred_train)
+
+
 
 
 
