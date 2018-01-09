@@ -7,7 +7,7 @@ import sys
 import pickle
 
 import clf as clf
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from tqdm import tqdm
 import pandas as pd
 import seaborn as sns
@@ -64,6 +64,22 @@ if __name__ == "__main__":
     print("train_score " + str(metrics.accuracy_score(Y_train, y_pred_train)))
     print("test_score " + str(metrics.accuracy_score(Y_test, y_pred_test)))
     print("dev_score " + str(metrics.accuracy_score(Y_dev, y_pred_dev)))
+
+    #quest4
+    tf_transformer = TfidfTransformer().fit(X_train_counts)
+    X_train_tf = tf_transformer.transform(X_train_counts)
+    X_test_tf = tf_transformer.transform(X_test_counts)
+    X_dev_tf = tf_transformer.transform(X_dev_counts)
+
+    mmb.fit(X_train_tf, Y_train)
+    y_pred_train = mmb.predict(X_train_tf)
+    y_pred_test = mmb.predict(X_test_tf)
+    y_pred_dev = mmb.predict(X_dev_tf)
+    print("train_score " + str(metrics.accuracy_score(Y_train, y_pred_train)))
+    print("test_score " + str(metrics.accuracy_score(Y_test, y_pred_test)))
+    print("dev_score " + str(metrics.accuracy_score(Y_dev, y_pred_dev)))
+
+
 
 
     #print("Number of mislabeled points out of a total %d points : %d"% (iris.data.shape[0], (iris.target != y_pred).sum()))
