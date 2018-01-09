@@ -19,6 +19,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn import linear_model
 from sklearn.linear_model import LogisticRegression
 from sys import stdin
+from sklearn.naive_bayes import MultinomialNB
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -48,11 +49,25 @@ if __name__ == "__main__":
     vectorizer.fit(X_train)
     X_train_counts = vectorizer.transform(X_train)
     X_test_counts = vectorizer.transform(X_test)
+    X_dev_counts = vectorizer.transform(X_dev)
+
     print(X_train.size)
     print(X_dev.size)
     print(X_test.size)
-    print(Y_train.size)
-    print(X_train_counts)
+
+    #quest 3
+    mmb = MultinomialNB()
+    mmb.fit(X_train_counts, Y_train)
+    y_pred_train = mmb.predict(X_train_counts)
+    y_pred_test = mmb.predict(X_test_counts)
+    y_pred_dev = mmb.predict(X_dev_counts)
+    print("train_score " + str(metrics.accuracy_score(Y_train, y_pred_train)))
+    print("test_score " + str(metrics.accuracy_score(Y_test, y_pred_test)))
+    print("dev_score " + str(metrics.accuracy_score(Y_dev, y_pred_dev)))
+
+
+    #print("Number of mislabeled points out of a total %d points : %d"% (iris.data.shape[0], (iris.target != y_pred).sum()))
+
 
 else:
     sys.exit()
